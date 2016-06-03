@@ -1,0 +1,135 @@
+<html>
+<head>
+<!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+        		
+</head>
+
+<body>
+<script>
+	$(document).ready(function(){
+		var jsonData = {"Rooms":[{id:"room1",name:"Room1"},{id:"room2",name:"Room2"},{id:"room3",name:"Room3"}],
+					"Boards":[{id:"board1",name:"Board1"},{id:"board2",name:"Board2"},{id:"board3",name:"Board3"}],
+					"cardNotifications":[{ name:"Card created",id:"0",checked:false},{name:"Card renamed",id:"Card renamed",checked:false},{name:"Comment added to card",id:"Comment added to card",checked:false},{name:"Attachment added to card",id:"Attachment added to card",checked:false},{name:"Description changed",id:"Description changed",checked:false},{name:"Due date changed",id:"Due date changed",checked:false},{name:"Label changed",id:"Label changed",checked:false},{name:"Member added to card",id:"Member added to card",checked:false},{name:"Card archived/unarchived",id:"Card archived/unarchived",checked:false}],
+					"checkListNotifications":[{ name:"Card created",id:"Card created",checked:false},{name:"Card renamed",id:"Card renamed",checked:false},{name:"Card Moved",id:"Card Moved",checked:false}],
+					"boardAndListNotifications":[{name:"List Created",id:"List Created",checked:false},{name:"List Renamed",id:"List Renamed",checked:false},{name:"List moved to other board",id:"List moved to other board",checked:false},{name:"List archived/unarchived",id:"List archived/unarchived",checked:false},{name:"Board renamed",id:"Board renamed",checked:false},{name:"Member added to board",id:"Member added to board",checked:false}]};
+		var rooms=jsonData.Rooms;
+		var boards=jsonData.Boards;
+		var boardsListNotifications=jsonData.boardAndListNotifications;
+		var cardNotifications = jsonData.cardNotifications;
+		var checkListNotifications = jsonData.checkListNotifications;
+		$("#boards").append($('<option>')).text("select board");
+		$.each(boards, function(id,obj){
+        $("#boards").append($('<option>').text(obj.name).attr('value',obj.id));
+		}); 
+		//checkboxes setting
+		$.each(boardsListNotifications, function () {
+		$("#boardsandlistnotifications").append($("<label>").text(this.name).prepend(
+        $("<input>").attr('type', 'checkbox').attr('name',this.name).val(this.id)
+          .prop('checked', this.checked)
+        ));
+        });	
+		
+		$.each(cardNotifications, function () {
+		$("#cardNotifications").append($("<label>").text(this.name).prepend(
+        $("<input>").attr('type', 'checkbox').attr('name',this.name).val(this.id)
+          .prop('checked', this.checked)
+        ));
+        });	
+		
+		$.each(checkListNotifications, function () {
+		$("#checkListNotifications").append($("<label>").text(this.name).prepend(
+        $("<input>").attr('type', 'checkbox').attr('name',this.name).val(this.id)
+          .prop('checked', this.checked)
+        ));
+        });	
+			
+		$("#rooms").append($('<option>')).text("select room");
+		$.each(rooms, function(id,obj){
+        $("#rooms").append($('<option>').text(obj.name).attr('value',obj.id));
+		}); 
+		
+	
+		
+		$.fn.serializeObject = function()
+        {
+        var o = {};
+		var a = this.serializeArray();
+		$.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+		});
+		return o;
+		};
+		$("form").submit(function (){
+		var res = JSON.stringify($('form').serializeObject());
+		alert(res);
+		});
+		
+		
+		
+		
+		
+		
+			<!-- 
+		$.ajax({
+                    type: "GET", 	
+                    url :"http://192.168.1.163:1235/getdata", 	
+               	
+                    contentType: "application/json",		
+                    dataType: "json", 	
+                    processdata: true, 	
+                    success: function (json) {
+                       // alert(json);
+                    },
+                    error: function (json) {
+                     //   alert(JSON.stringify(json));
+                    }
+                });
+	-->
+	
+	
+		
+		});
+	
+
+                
+ 
+			
+</script>
+	<div id="container">
+		<div id="preferences" style="display:block">
+			<form name="form" action="" method="post"> 		
+				<h3>Trello Configuration</h3><br>
+				<label>Trello Boards</label>
+				<select name="board" id="boards"></select><br><br>
+				
+				<label>Notifications : Boards&Lists</label>
+				<div  id="boardsandlistnotifications"></div><br><br>
+				
+				<label>Notifications : Cards</label>
+				<div id="cardNotifications"></div><br><br>
+				
+				<label>Notifications : Checklists</label>
+				<div id="checkListNotifications"></div><br><br>
+				
+				<h3>Spark Configuration</h3>
+				<label>Spark Rooms</label>
+				<select name="room" id="rooms"></select><br/>
+								
+				<br><br>
+				<input type="submit" value="Add Integration"  />
+				
+			</form>
+		</div>
+		<div id="result"></div>
+	</div>
+</body>
+
+</html>
