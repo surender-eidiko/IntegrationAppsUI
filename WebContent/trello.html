@@ -7,103 +7,180 @@
 
 <body>
 <script>
+var formData="";
 function testFunc(){
 	
 	alert("Hello");
 }
-	$(document).ready(function(){
-		
-		$.ajax({
-                    type: "GET", 	
-                     //url :"http://192.168.1.163:1235/getdata", 	
-                    url:"/IntegrationAppsUI/test.html",
-                    contentType: "application/json",		
-                    success: function (json) {
-                    	
-                    	var json = JSON.parse(json);
-                    	//alert(JSON.stringify(json));
-                    	var boards=json.Boards;
-						var boardandListNotifications=json.boardAndListNotifications;
-						var CardNotifications = json.cardNotifications;
-						var CheckListNotifications = json.checkListNotifications;
-                    	var rooms = json.Rooms;
-                    	var displayname = json.displayname;
-                    	//boards generation
-						$.each(boards, function(id,obj){
-			        	$("#boards").append($('<option>').text(obj.name).attr('value',obj.id));
-						}); 
-                    	
-						$.each(boardandListNotifications, function () {
-							$("#boardAndListNotifications").append($("<label>").text(this.name).prepend(
-					        $("<input>").attr('type', 'checkbox').attr('name',"boardsAndListNotifications").val(this.id)
-					          .prop('checked', this.checked)
-					        ));
-					        });	
-						$.each(CardNotifications, function () {
-							$("#cardNotifications").append($("<label>").text(this.name).prepend(
-					        $("<input>").attr('type', 'checkbox').attr('name',"cardNotifications").val(this.id)
-					          .prop('checked', this.checked)
-					        ));
-					        });	
-							
-						$.each(CheckListNotifications, function () {
-							$("#checkListNotifications").append($("<label>").text(this.name).prepend(
-					        $("<input>").attr('type', 'checkbox').attr('name',"checkListNotifications").val(this.id)
-					          .prop('checked', this.checked)
-					        ));
-					        });	
-								
-							$("#rooms").append($('<option>')).text("select room");
-							$.each(rooms, function(id,obj){
-					        $("#rooms").append($('<option>').text(obj.name).attr('value',obj.id));
-							}); 
+function loadForm()
+{
+	$.ajax({
+                type: "GET", 	
+                 //url :"http://192.168.1.163:1235/getdata", 	
+                url:"/IntegrationAppsUI/test.html",
+                contentType: "application/json",		
+                success: function (json) {
+                	
+                	var json = JSON.parse(json);
+                	//alert(JSON.stringify(json));
+                	var boards=json.Boards;
+					var boardandListNotifications=json.boardAndListNotifications;
+					var CardNotifications = json.cardNotifications;
+					var CheckListNotifications = json.checkListNotifications;
+                	var rooms = json.Rooms;
+                	var displayname = json.displayname;
+                	//boards generation
+       
+					$.each(boards, function(id,obj){
+		        	$("#boards").append($('<option>').text(obj.name).attr('value',obj.id));
+					}); 
+                	
+					$.each(boardandListNotifications, function () {
+						$("#boardAndListNotifications").append($("<label>").text(this.name).prepend(
+				        $("<input>").attr('type', 'checkbox').attr('name',"boardsAndListNotifications").val(this.id)
+				          .prop('checked', this.checked)
+				        ));
+				        });	
+					$.each(CardNotifications, function () {
+						$("#cardNotifications").append($("<label>").text(this.name).prepend(
+				        $("<input>").attr('type', 'checkbox').attr('name',"cardNotifications").val(this.id)
+				          .prop('checked', this.checked)
+				        ));
+				        });	
 						
-							$("#displayname").val(displayname);
-							//alert(JSON.stringify(rooms));
-                    },
-                });
+					$.each(CheckListNotifications, function () {
+						$("#checkListNotifications").append($("<label>").text(this.name).prepend(
+				        $("<input>").attr('type', 'checkbox').attr('name',"checkListNotifications").val(this.id)
+				          .prop('checked', this.checked)
+				        ));
+				        });	
+							
+						$("#rooms").append($('<option>')).text("select room");
+						$.each(rooms, function(id,obj){
+				        $("#rooms").append($('<option>').text(obj.name).attr('value',obj.id));
+						}); 
+					
+						$("#displayname").val(displayname);
+						//alert(JSON.stringify(rooms));
+                },
+            });
+}
 
-		$.fn.serializeObject = function()
-        {
-        var o = {};
-		var a = this.serializeArray();
-		$.each(a, function() {
-        if (o[this.name] !== undefined) {
-            if (!o[this.name].push) {
-                o[this.name] = [o[this.name]];
-            }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
-        }
-		});
-		return o;
-		};
-		$("form").submit(function (){
-			$("#loading").show();
-			$.ajax({
-				url: "http://192.168.1.157:8080/IntegrationAppsUI/ajaxtest.html",
-				type : "GET",
-				success : function(){
-					alert("Success");
-					$("#loading").show();
-				},
-				 error: function(data){
-					$("#loading").hide();
-					alert(data);
-					setTimeOut(testFunc,5000);
-				} 
+	
+
+		
+		
+		$(document).ready(function(){
+			loadForm();
+			
+			$.fn.serializeObject = function()
+	        {
+	        var o = {};
+			var a = this.serializeArray();
+			$.each(a, function() {
+	        if (o[this.name] !== undefined) {
+	            if (!o[this.name].push) {
+	                o[this.name] = [o[this.name]];
+	            }
+	            o[this.name].push(this.value || '');
+	        } else {
+	            o[this.name] = this.value || '';
+	        }
 			});
-			//var res = JSON.stringify($('form').serializeObject());
-			//alert(res);
+			return o;
+			};
+			
+			$("#submitButton").click(function (e){
+				//alert('hi...')
+				/* $("#loading").show();
+				$.ajax({
+					url: "ajaxtest.html",
+					type : "GET",
+					success : function(){
+						alert("Success");
+						$("#loading").show();
+					},
+					 error: function(data){
+						$("#loading").hide();
+						alert(data);
+						setTimeOut(testFunc,5000);
+					} 
+				}); */
+				var res = JSON.stringify($('form').serializeObject());
+				//alert(res);
+				formData = res;
+				console.log(formData);
+				return false;
+			});
+			
+			$("#editButton").click(function (e){
+				e.preventDefault();
+				var json = JSON.parse(formData);
+				
+				$("#boards").val(json.board);
+				$("#rooms").val(json.room);
+				$('#displayname').val(json.displayname);
+				var boardandListNotifications = json.boardsAndListNotifications;
+				$.each(changeToArray(boardandListNotifications), function (index, value){
+					  for(var i=0; i < form.elements.length; i++){
+						  var e1 = form.elements[i];
+						  //console.log(e1);
+						    if(e1.name==="boardsAndListNotifications" && e1.value===value){
+						    	e1.setAttribute("checked","checked");
+						    }
+						}
+					});
+				var cardNotifications = json.cardNotifications;
+				$.each(changeToArray(cardNotifications), function (index, value){
+					  for(var i=0; i < form.elements.length; i++){
+						    var e = form.elements[i];
+						    if(e.name=="cardNotifications" && e.value==value){
+						    	e.setAttribute("checked","checked");
+						    }
+						}
+					});
+				
+				var checkListNotifications = json.checkListNotifications;
+				console.log(checkListNotifications);
+				$.each(changeToArray(checkListNotifications), function (index, value){
+					  for(var i=0; i < form.elements.length; i++){
+						    var e = form.elements[i];
+						    if(e.name=="checkListNotifications" && e.value==value){
+						    	e.setAttribute("checked","checked");
+						    }
+						}
+					});
+				return false;
+			});
+			
+			/* $("#resetButton").click(function (e){
+				e.preventDefault();
+				$("#boardAndListNotifications").html("");
+				$("#cardNotifications").html("");
+				$("#checkListNotifications").html("");
+				 loadForm();
+			}); */
+			
+			function changeToArray(obj){
+				if( typeof obj === 'string' ) {
+					obj = [ obj ];
+					console.log("changed to array!");
+					return obj;
+				}
+				else{
+					return obj;
+				}
+			}
+		
 		});
-});
+		
+		
 			
 </script>
 	<div id="container">
 		<div id="loading" style="display: none;">Loading</div>
 		<div id="preferences" style="display:block">
-			<form name="form" action="" method="post"> 		
+			<form name="form" id="form"> 		
 				<h3>Trello Configuration</h3><br>
 				<label>Trello Boards</label>
 				<select name="board" id="boards"></select><br><br>
@@ -125,9 +202,11 @@ function testFunc(){
 				<input name="displayname" id="displayname"><br>
 					
 				<br><br>
-				<input type="submit" value="Add Integration" />
-				
+				<button id="submitButton">Save</button>
+				<button id="editButton">Edit</button>
+				<input type="reset" value="Reset" id="resetButton"/>
 			</form>
+			
 		</div>
 		
 	</div>
